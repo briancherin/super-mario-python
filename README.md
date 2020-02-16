@@ -1,3 +1,8 @@
+
+# My Twist
+I am attempting to create a version of Super Mario where the character's movement is controlled by the varying volume of microphone input. For example, the player would need to make a continuous hum/sound to move the character forward, and to jump, the player would have to produce a sharp spike in volume. 
+
+
 # Super Mario Implementation in Python
 
 This is inspired by Meth-Meth-Method's: https://github.com/meth-meth-method/super-mario/
