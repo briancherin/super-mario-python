@@ -5,6 +5,15 @@ from classes.Menu import Menu
 from classes.Sound import Sound
 from entities.Mario import Mario
 
+import sounddevice as sd
+import numpy as np
+
+import globals
+
+def process_sound_info(indata, outdata, frames, time, status):
+    volume_level = int(np.linalg.norm(indata)*10)
+    globals.setVol(volume_level)
+    print("..............." + str(globals.getVol()))
 
 windowSize = (640,480)
 def main():
@@ -23,16 +32,19 @@ def main():
     mario = Mario(0, 0, level, screen, dashboard, sound)
     clock = pygame.time.Clock()
 
-    while not mario.restart:
-        pygame.display.set_caption("Super Mario running with {:d} FPS".format(int(clock.get_fps())))
-        if mario.pause:
-            mario.pauseObj.update()
-        else:
-            level.drawLevel(mario.camera)
-            dashboard.update()
-            mario.update()
-        pygame.display.update()
-        clock.tick(max_frame_rate)
+    globals.init()
+
+    with sd.Stream(callback=process_sound_info):
+        while not mario.restart:
+            pygame.display.set_caption("Super Mario running with {:d} FPS".format(int(clock.get_fps())))
+            if mario.pause:
+                mario.pauseObj.update()
+            else:
+                level.drawLevel(mario.camera)
+                dashboard.update()
+                mario.update()
+            pygame.display.update()
+            clock.tick(max_frame_rate)
     main()
 
 

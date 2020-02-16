@@ -2,17 +2,41 @@ import pygame
 from pygame.locals import *
 import sys
 
+from multiprocessing import Process, Value
+import sounddevice as sd
+import numpy as np
+
+import globals
 
 class Input:
+
+    # mic_volume = Value('i', 0)
+
     def __init__(self, entity):
         self.mouseX = 0
         self.mouseY = 0
         self.entity = entity
 
+
     def checkForInput(self):
-        self.checkForKeyboardInput()
+        #self.checkForKeyboardInput()
         self.checkForMouseInput()
+        self.checkForAudioInput()
         self.checkForQuitAndRestartInputEvents()
+
+    def checkForAudioInput(self):
+        vol = globals.getVol()
+
+        #Move forward
+        if vol > 30:
+            self.entity.traits["goTrait"].direction = 1
+        else:
+            self.entity.traits["goTrait"].direction = 0
+
+
+        isJumping = vol > 100
+        self.entity.traits['jumpTrait'].jump(isJumping)
+        
 
     def checkForKeyboardInput(self):
         pressedKeys = pygame.key.get_pressed()
